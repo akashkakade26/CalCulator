@@ -101,5 +101,4 @@ private:
 	CFont m_Font_CButton;
 	CFont m_Font_MFCButton;
 	DWORD m_dwRegValue;
-	HINSTANCE hdll;
 };

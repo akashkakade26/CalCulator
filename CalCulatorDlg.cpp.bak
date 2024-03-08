@@ -150,9 +150,10 @@ BOOL CCalCulatorDlg::OnInitDialog()
 	m_result = _T("0");
 	UpdateData(FALSE);
 
-	//hdll = AfxLoadLibrary(_T("E:\\user\\Akashkakade\\Newplatform\\Operation\\x64\\Debug\\Operation.dll"));
-	 
-	hdll = AfxLoadLibrary(_T("Operation.dll"));
+	//typedef int (*LPADDITION)(int, int);
+	//LPADDITION pFunADD;
+	hdll = AfxLoadLibrary(_T("E:\\user\\Akashkakade\\Newplatform\\Operation\\x64\\Debug\\Operation.dll"));
+	//pFunADD = (LPADDITION)GetProcAddress(hdll, "Addition");
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -544,7 +545,10 @@ void CCalCulatorDlg::CheckCalculation()
 
 		if (OperationType == 1)
 		{
-			dbResult = Addition(dbnumber1, dbnumber2);
+			typedef double (*LPADDITION)(double, double);
+			LPADDITION pFunADD;
+			pFunADD = (LPADDITION)GetProcAddress(hdll, "Addition");
+			dbResult = pFunADD(dbnumber1, dbnumber2);
 		}
 		else if (OperationType == 2)
 		{
@@ -566,38 +570,17 @@ void CCalCulatorDlg::CheckCalculation()
 
 double CCalCulatorDlg::Addition(double dbVal1, double dbVal2)
 {
-	double dbResult = 0;
-
-	typedef double (*LPADDITION)(double, double);
-	LPADDITION pFunADD;
-	pFunADD = (LPADDITION)GetProcAddress(hdll, "Addition");
-	dbResult = pFunADD(dbVal1, dbVal2);
-	
-	return dbResult;
+	return dbVal1 + dbVal2;
 }
 
 double CCalCulatorDlg::SubStract(double dbVal1, double dbVal2)
 {
-	double dbResult = 0;
-
-	typedef double (*LPADDITION)(double, double);
-	LPADDITION pFunADD;
-	pFunADD = (LPADDITION)GetProcAddress(hdll, "Subtraction");
-	dbResult = pFunADD(dbVal1, dbVal2);
-
-	return dbResult;
+	return dbVal1 - dbVal2;
 }
 
 double CCalCulatorDlg::Multiply(double dbVal1, double dbVal2)
 {
-	double dbResult = 0;
-
-	typedef double (*LPADDITION)(double, double);
-	LPADDITION pFunADD;
-	pFunADD = (LPADDITION)GetProcAddress(hdll, "Multiply");
-	dbResult = pFunADD(dbVal1, dbVal2);
-
-	return dbResult;
+	return  dbVal1 * dbVal2;
 }
 double CCalCulatorDlg::Division(double dbVal1, double dbVal2)
 {
@@ -605,16 +588,10 @@ double CCalCulatorDlg::Division(double dbVal1, double dbVal2)
 
 	try
 	{
-		if (dbVal1 == 0) {
+		if (dbVal2 == 0) {
 			throw std::exception("Division by zero exception");
 		}
-
-		typedef double (*LPADDITION)(double, double);
-		LPADDITION pFunADD;
-		pFunADD = (LPADDITION)GetProcAddress(hdll, "Divide");
-		dbResult = pFunADD(dbVal1, dbVal2);
-
-		return dbResult;
+		return dbVal1 / dbVal2;
 	}
 	catch (const std::exception& e)
 	{
