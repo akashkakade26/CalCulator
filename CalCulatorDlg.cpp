@@ -145,13 +145,13 @@ BOOL CCalCulatorDlg::OnInitDialog()
 
 	m_eb_ResultDisplay.SetFont(&m_Font_EditBox);
 
+	m_bDotClicked = FALSE;
+
 	m_StrResultDisplay = _T("0");
 	m_fResult = 0;
 	m_result = _T("0");
 	UpdateData(FALSE);
-
-	//hdll = AfxLoadLibrary(_T("E:\\user\\Akashkakade\\Newplatform\\Operation\\x64\\Debug\\Operation.dll"));
-	 
+ 
 	hdll = AfxLoadLibrary(_T("Operation.dll"));
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -427,19 +427,24 @@ void CCalCulatorDlg::OnBnClickedBt0()
 void CCalCulatorDlg::OnBnClickedBtDot()
 {
 	// TODO: Add your control notification handler code here
-	if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
+	if (m_bDotClicked == FALSE)
 	{
-		m_StrResultDisplay = _T("0");
+		if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
+		{
+			m_StrResultDisplay = _T("0");
+		}
+
+		m_StrResultDisplay = m_StrResultDisplay /*+ _T(" ") */ + _T(".");
+		m_bDotClicked = TRUE;
+		UpdateData(FALSE);
 	}
-	m_StrResultDisplay = m_StrResultDisplay /*+ _T(" ") */ + _T(".");
-	UpdateData(FALSE);
 }
 
 
 void CCalCulatorDlg::OnBnClickedBtResult()
 {
 	// TODO: Add your control notification handler code here
-	//m_StrResultDisplay = m_StrResultDisplay + _T(" ") + _T("");
+	m_bDotClicked = FALSE;
 	CheckCalculation();
 	UpdateData(FALSE);
 }
@@ -448,6 +453,7 @@ void CCalCulatorDlg::OnBnClickedBtResult()
 void CCalCulatorDlg::OnBnClickedBtAdd()
 {
 	// TODO: Add your control notification handler code here
+	m_bDotClicked = FALSE;
 	if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
 	{
 		m_StrResultDisplay = _T("0");
@@ -461,6 +467,7 @@ void CCalCulatorDlg::OnBnClickedBtAdd()
 void CCalCulatorDlg::OnBnClickedBtSubstract()
 {
 	// TODO: Add your control notification handler code here
+	m_bDotClicked = FALSE;
 	if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
 	{
 		m_StrResultDisplay = _T("0");
@@ -474,6 +481,7 @@ void CCalCulatorDlg::OnBnClickedBtSubstract()
 void CCalCulatorDlg::OnBnClickedBtMultiply()
 {
 	// TODO: Add your control notification handler code here
+	m_bDotClicked = FALSE;
 	if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
 	{
 		m_StrResultDisplay = _T("0");
@@ -487,6 +495,7 @@ void CCalCulatorDlg::OnBnClickedBtMultiply()
 void CCalCulatorDlg::OnBnClickedBtDivide()
 {
 	// TODO: Add your control notification handler code here
+	m_bDotClicked = FALSE;
 	if (m_StrResultDisplay.CompareNoCase(_T("")) == 0)
 	{
 		m_StrResultDisplay = _T("0");
@@ -500,6 +509,7 @@ void CCalCulatorDlg::OnBnClickedBtDivide()
 void CCalCulatorDlg::OnBnClickedBtClear()
 {
 	// TODO: Add your control notification handler code here
+	m_bDotClicked = FALSE;
 	m_StrResultDisplay = _T("0");
 	UpdateData(FALSE);
 }
@@ -618,7 +628,7 @@ double CCalCulatorDlg::Division(double dbVal1, double dbVal2)
 	}
 	catch (const std::exception& e)
 	{
-		AfxMessageBox(CA2T(e.what())); // Display error message using AfxMessageBox
+		AfxMessageBox(CA2T(e.what())); 
 
 		return 0.0;
 	}
@@ -638,19 +648,9 @@ BOOL CCalCulatorDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			// Handle digit input
 			int nDigit = (nVirtKey >= '0' && nVirtKey <= '9') ? (nVirtKey - '0') : (nVirtKey - VK_NUMPAD0);
-			HandleDigitInput(nDigit); // Implement your logic for digit input
-			return TRUE; // Message handled
+			HandleDigitInput(nDigit); 
+			return TRUE; 
 		}
-
-		//// Check for digit keys (0-9)
-		//if (nVirtKey >= '0' && nVirtKey <= '9')
-		//{
-		//	// Handle digit input
-		//	int nDigit = nVirtKey - '0'; // Convert ASCII to digit value
-		//	HandleDigitInput(nDigit); // Implement your logic for digit input
-
-		//	return TRUE; // Message handled
-		//}
 
 		// Check for arithmetic operator keys (+, -, *, /, =)
 		switch (nVirtKey)
@@ -675,7 +675,7 @@ BOOL CCalCulatorDlg::PreTranslateMessage(MSG* pMsg)
 			break;
 
 		}
-		return TRUE; // Message handled
+		return TRUE; 
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
@@ -749,13 +749,10 @@ void CCalCulatorDlg::ReadRegistry()
 
 		if (result == ERROR_SUCCESS)
 		{
-			// Display the retrieved value
-			
 			m_dwRegValue = value;
 		}
 		else
 		{
-			// Handle error reading registry value
 			AfxMessageBox(_T("Error reading DWORD registry value."));
 		}
 
@@ -764,7 +761,6 @@ void CCalCulatorDlg::ReadRegistry()
 	}
 	else
 	{
-		// Handle error opening registry key
 		//AfxMessageBox(_T("Error opening registry key."));
 	}
 }
