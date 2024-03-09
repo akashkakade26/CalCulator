@@ -94,6 +94,7 @@ public:
 	void HandleDigitInput(int idigit);
 	void ReadRegistry();
 	void HideButtons(BOOL );
+	void OnBnClickedBackspaceButton();
 private:
 	float m_fResult;
 	CString m_result;
@@ -102,5 +103,6 @@ private:
 	CFont m_Font_MFCButton;
 	DWORD m_dwRegValue;
 	BOOL m_bDotClicked;
+	BOOL m_binitVal;
 	HINSTANCE hdll;
 };

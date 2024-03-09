@@ -132,10 +132,10 @@ BOOL CCalCulatorDlg::OnInitDialog()
 		0, 0, 0, 0, _T("Vardana"));
 
 
-	m_Font_CButton.CreateFont(30, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET,
+	m_Font_CButton.CreateFont(20, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET,
 		0, 0, 0, 0, _T("Vardana"));
 
-	m_Font_MFCButton.CreateFont(16, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET,
+	m_Font_MFCButton.CreateFont(20, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET,
 		0, 0, 0, 0, _T("Times New Roman"));
 
 	ReadRegistry();
@@ -143,6 +143,7 @@ BOOL CCalCulatorDlg::OnInitDialog()
 	//if()
 	HideButtons(m_dwRegValue);
 
+	m_eb_ResultDisplay.EnableWindow(FALSE);
 	m_eb_ResultDisplay.SetFont(&m_Font_EditBox);
 
 	m_bDotClicked = FALSE;
@@ -434,10 +435,20 @@ void CCalCulatorDlg::OnBnClickedBtDot()
 			m_StrResultDisplay = _T("0");
 		}
 
-		m_StrResultDisplay = m_StrResultDisplay /*+ _T(" ") */ + _T(".");
+		if (m_StrResultDisplay.Right(1) == _T("+") ||
+			m_StrResultDisplay.Right(1) == _T("-") ||
+			m_StrResultDisplay.Right(1) == _T("*") ||
+			m_StrResultDisplay.Right(1) == _T("/"))
+		{
+			m_StrResultDisplay = m_StrResultDisplay + _T("0");
+		}
+
+
+		m_StrResultDisplay = m_StrResultDisplay + _T(".");
 		m_bDotClicked = TRUE;
 		UpdateData(FALSE);
 	}
+	
 }
 
 
@@ -673,12 +684,27 @@ BOOL CCalCulatorDlg::PreTranslateMessage(MSG* pMsg)
 		case VK_RETURN:
 			OnBnClickedBtResult();
 			break;
-
+		case VK_BACK:
+			OnBnClickedBackspaceButton();
+			break;
 		}
 		return TRUE; 
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CCalCulatorDlg::OnBnClickedBackspaceButton()
+{
+	// TODO: Add your control notification handler code here
+	int length = m_StrResultDisplay.GetLength();
+
+	if (length > 0)
+	{
+		// Remove the last character
+		m_StrResultDisplay = m_StrResultDisplay.Left(length - 1);
+		UpdateData(FALSE);
+	}
 }
 void CCalCulatorDlg::HandleDigitInput(int iDigit)
 {
