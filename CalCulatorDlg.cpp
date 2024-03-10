@@ -138,7 +138,7 @@ BOOL CCalCulatorDlg::OnInitDialog()
 	m_Font_MFCButton.CreateFont(20, 0, 0, 0, FW_BOLD, 0, 0, 0, ANSI_CHARSET,
 		0, 0, 0, 0, _T("Times New Roman"));
 
-	ReadRegistry();
+	//ReadRegistry();
 
 	//if()
 	HideButtons(m_dwRegValue);
